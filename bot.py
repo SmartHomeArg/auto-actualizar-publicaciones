@@ -15,14 +15,18 @@ with sync_playwright() as p:
     page = context.new_page()
 
     # 1. Login
-    page.goto("https://www.compraensanjuan.com/login.php", timeout=60000)
-    page.wait_for_selector("input[name='email']", timeout=60000)
-    page.wait_for_selector("input[name='clave']", timeout=60000)
+page.goto("https://www.compraensanjuan.com/login.php", timeout=60000)
+page.wait_for_selector("input[name='email']", timeout=60000)
+page.wait_for_selector("input[name='clave']", timeout=60000)
 
-    page.fill("input[name='email']", USUARIO)
-    page.fill("input[name='clave']", PASSWORD)
-    page.click("button[type='submit']")
-    page.wait_for_load_state("networkidle")
+page.fill("input[name='email']", USUARIO)
+page.fill("input[name='clave']", PASSWORD)
+
+page.wait_for_selector("form button[type='submit']:visible", timeout=60000)
+page.click("form button[type='submit']:visible")
+
+page.wait_for_load_state("networkidle")
+
 
     # 2. Ir a Mi cuenta (donde está el botón real)
     page.goto("https://www.compraensanjuan.com/micuenta.php", timeout=60000)
