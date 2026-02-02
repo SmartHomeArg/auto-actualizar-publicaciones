@@ -15,43 +15,24 @@ with sync_playwright() as p:
     page = context.new_page()
 
     # 1. Login
-page.goto("https://www.compraensanjuan.com/login.php", timeout=60000)
-page.wait_for_selector("input[name='email']", timeout=60000)
-page.wait_for_selector("input[name='clave']", timeout=60000)
+    page.goto("https://www.compraensanjuan.com/login.php", timeout=60000)
+    page.wait_for_selector("input[name='email']", timeout=60000)
+    page.wait_for_selector("input[name='clave']", timeout=60000)
 
-page.fill("input[name='email']", USUARIO)
-page.fill("input[name='clave']", PASSWORD)
+    page.fill("input[name='email']", USUARIO)
+    page.fill("input[name='clave']", PASSWORD)
 
-page.wait_for_selector("form button[type='submit']:visible", timeout=60000)
-page.click("form button[type='submit']:visible")
+    page.wait_for_selector("form button[type='submit']:visible", timeout=60000)
+    page.click("form button[type='submit']:visible")
+    page.wait_for_load_state("networkidle")
 
-page.wait_for_load_state("networkidle")
-
-
-    # 2. Ir a Mi cuenta (donde está el botón real)
+    # 2. Ir a Mi cuenta
     page.goto("https://www.compraensanjuan.com/micuenta.php", timeout=60000)
     page.wait_for_load_state("networkidle")
 
-    # 3. Click en el botón que llama a validar actualizar
+    # 3. Click en Actualizar publicaciones
     page.wait_for_selector("button[onclick*='actualizaractivos']", timeout=60000)
     page.click("button[onclick*='actualizaractivos']")
 
     page.wait_for_timeout(4000)
-    browser.close()
-
-
-    # 4. Enviar formulario (si el botón es submit)
-    page.click("button[type='submit']")
-
-    # 5. Esperar que termine el login
-    page.wait_for_load_state("networkidle")
-
-    # 6. Ir a publicaciones
-    page.goto("https://www.compraensanjuan.com/mispublicaciones.php", timeout=60000)
-    page.wait_for_timeout(3000)
-
-    # 7. Click en actualizar
-    page.locator("text=Actualizar").first.click()
-
-    page.wait_for_timeout(3000)
     browser.close()
