@@ -40,10 +40,10 @@ with sync_playwright() as p:
     time.sleep(4)
 
     # 5️⃣ Intentar cerrar sesión (opcional)
-    try:
-        page.wait_for_selector('a[href="cierre_sesion.php"]', timeout=15000)
-        page.click('a[href="cierre_sesion.php"]')
-    except:
-        print("No se encontró el botón de cerrar sesión, continuando igual...")
+    #try:
+    #    page.wait_for_selector('a[href="cierre_sesion.php"]', timeout=15000)
+    #    page.click('a[href="cierre_sesion.php"]')
+    #except:
+    #    print("No se encontró el botón de cerrar sesión, continuando igual...")
 
     browser.close()
