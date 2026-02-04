@@ -2,9 +2,7 @@ name: Actualizar publicaciones
 
 on:
   schedule:
-    - cron: "0 9 * * *"   # 06:00 AR
-    - cron: "0 17 * * *"  # 14:00 AR
-    - cron: "0 1 * * *"   # 22:00 AR
+    - cron: "*/30 12-26 * * *"
   workflow_dispatch:
 
 jobs:
