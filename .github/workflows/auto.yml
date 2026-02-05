@@ -2,8 +2,9 @@ name: Actualizar publicaciones
 
 on:
   schedule:
-    - cron: "*/30 12-26 * * *"
-  workflow_dispatch:
+    - cron: "0,30 12-23 * * *"
+    - cron: "0,30 0-2 * * *"
+  workflow_dispatch::
 
 jobs:
   run-bot:
