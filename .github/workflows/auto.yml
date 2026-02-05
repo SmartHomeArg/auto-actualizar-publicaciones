@@ -2,8 +2,9 @@ name: Actualizar publicaciones
 
 on:
   schedule:
-    - cron: "0,30 12-23 * * *"
-    - cron: "0,30 0-2 * * *"
+    - cron: "0,30 11-23 * * *"   # UTC 11-23 -> ART 08:00-20:30
+    - cron: "0,30 0-1 * * *"     # UTC 00-01 -> ART 21:00-22:30
+    - cron: "0 2 * * *"          # UTC 02:00 -> ART 23:00 (ejecución puntual)
   workflow_dispatch:
 
 jobs:
