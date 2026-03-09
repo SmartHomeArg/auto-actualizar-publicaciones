@@ -1,4 +1,4 @@
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError
 import os
 import time
 
@@ -8,41 +8,43 @@ PASSWORD = os.environ.get("PASSWORD")
 if not USUARIO or not PASSWORD:
     raise Exception("Faltan las variables de entorno USUARIO o PASSWORD")
 
+URL = "https://www.compraensanjuan.com/login.php"
+
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
+
     context = browser.new_context(
-        viewport={"width": 1920, "height": 1080},
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
+        ignore_https_errors=True
     )
+
     page = context.new_page()
 
-    # 1️⃣ Abrir login
-    page.goto("https://www.compraensanjuan.com/login.php", timeout=60000)
+    # Intentar cargar la página hasta 3 veces
+    for intento in range(3):
+        try:
+            print(f"Intento {intento+1} de cargar la página")
+            page.goto(URL, wait_until="domcontentloaded", timeout=20000)
+            break
+        except TimeoutError:
+            print("Timeout al cargar la página, reintentando...")
+            time.sleep(5)
+    else:
+        raise Exception("No se pudo cargar la página")
 
-    # 2️⃣ Completar campos
-    page.wait_for_selector('input[name="email"]', timeout=60000)
-    page.wait_for_selector('input[name="clave"]', timeout=60000)
+    # Login
     page.fill('input[name="email"]', USUARIO)
     page.fill('input[name="clave"]', PASSWORD)
 
-    # 3️⃣ Click en "Siguiente"
     page.click('button[onclick*="valida_envia"]')
 
-    # Esperar redirección automática a micuenta.php
     page.wait_for_url("**/micuenta.php", timeout=60000)
-    page.wait_for_load_state("networkidle")
 
-    # 4️⃣ Click en botón "Actualizar publicaciones"
-    page.wait_for_selector('button[onclick*="actualizaractivos"]', timeout=60000)
+    # Actualizar publicaciones
     page.click('button[onclick*="actualizaractivos"]')
 
-    # Esperar que termine la acción
-    time.sleep(4)
+    time.sleep(3)
 
-    # 5️⃣ Intentar cerrar sesión (opcional)
-    #try:
-    #    page.wait_for_selector('a[href="cierre_sesion.php"]', timeout=15000)
-    #    page.click('a[href="cierre_sesion.php"]')
+    browser.close()
     #except:
     #    print("No se encontró el botón de cerrar sesión, continuando igual...")
 
